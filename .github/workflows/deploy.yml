@@ -1,0 +1,18 @@
+name: Deploy
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Deploy to Server
+              run: |
+                  ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} debian@thoth-edu.fr "cd /home/debian/beebot/beebot && git pull && npm ci && pm2 restart beebot"
