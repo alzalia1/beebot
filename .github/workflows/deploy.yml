@@ -13,6 +13,11 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
+            - name: Setup SSH
+              run: |
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+                  chmod 600 private_key
+
             - name: Deploy to Server
               run: |
-                  ssh -o StrictHostKeyChecking=no -i ${{ secrets.SSH_PRIVATE_KEY }} debian@thoth-edu.fr "cd /home/debian/beebot/beebot && git pull && npm ci && pm2 restart beebot"
+                  ssh -o StrictHostKeyChecking=no -i private_key debian@thoth-edu.fr "cd /home/debian/beebot/beebot && git pull && npm ci && pm2 restart beebot"
